@@ -12,15 +12,17 @@ class TodoController extends Controller
 	public function index(Request $request)
 	{
 		$user_id = Auth::id();
-		$items = Todos::where('user_id', $user_id)->get();
+		$items = Todos::where('user_id', $user_id)->orderBy('priority', 'desc')->get();
 		return view('todo.index', ['items' => $items]);
 	}
+
 
 	public function create(Request $request)
 	{
 		$user_id = Auth::id();
 		return view('todo.create', ['user_id' => $user_id]);
 	}
+
 
 	public function store(TodoRequest $request)
 	{
@@ -31,11 +33,13 @@ class TodoController extends Controller
 		return redirect('/todo');
 	}
 
+
 	public function edit(Request $request)
 	{
 		$todo = Todos::find($request->id);
 		return view('todo.edit', ['form' => $todo]);
 	}
+
 
 	public function update(TodoRequest $request)
 	{
@@ -46,15 +50,18 @@ class TodoController extends Controller
 		return redirect('/todo');
 	}
 
+
 	public function delete(Request $request)
 	{
 		$todo = Todos::find($request->id);
 		return view('todo.del', ['form' => $todo]);
 	}
+	
 
 	public function remove(Request $request)
 	{
-		Todos::find($request->id)->delete();
+		$todo = Todos::find($request->id);
+		$todo->delete();
 		return redirect('/todo');
 	}
 }
